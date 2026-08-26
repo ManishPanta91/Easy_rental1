@@ -1,5 +1,3 @@
-import React from 'react'
-
 // Tailwind-based Hero component (motorcycle/scooter design + Popular Vehicles)
 // Replace existing Hero with this Tailwind implementation. Ensure Tailwind is configured in the project.
 

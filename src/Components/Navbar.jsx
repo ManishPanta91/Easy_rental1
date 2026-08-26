@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { RxCross2 } from "react-icons/rx";
+import { useState } from "react";
+
 import Logo from "../assets/rent.png";
-import { NavLink } from "react-router-dom";
-import { IoIosContact, IoIosHome } from "react-icons/io";
+
+import { NavLink, useNavigate } from "react-router-dom";
+
+import { IoIosHome } from "react-icons/io";
 import { FaUsers } from "react-icons/fa";
 import { FaPhoneVolume } from "react-icons/fa6";
 import { LuSettings2 } from "react-icons/lu";
@@ -10,102 +12,368 @@ import { LuSettings2 } from "react-icons/lu";
 import { RiMotorbikeFill } from "react-icons/ri";
 import { RiEBikeFill } from "react-icons/ri";
 
-import { FaServicestack } from "react-icons/fa";
-import { MdOutlineRoundaboutLeft } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
+import { FiMenu } from "react-icons/fi";
+
+import { toast } from "react-toastify";
 
 const Navbar = () => {
+
   const [isMenuOpen, setIsMenuopen] = useState(false);
 
+  const navigate = useNavigate();
+
+  // Check login status
+  const isLoggedIn =
+    localStorage.getItem("isLoggedIn") === "true";
+
+  // Logout function
+  const handleLogout = () => {
+
+    // Remove login status
+    localStorage.removeItem("isLoggedIn");
+
+    // Show message
+    toast.success("Logged out successfully!");
+
+    // Close mobile menu
+    setIsMenuopen(false);
+
+    // Go to home
+    navigate("/");
+  };
+
   return (
+
     <div className="fixed top-0 left-0 z-50 w-full bg-white px-4 shadow-md md:px-10">
+
+      {/* ================= NAVBAR ================= */}
+
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
+
+        {/* LOGO */}
+
         <img
-          className="w-[100px] h-[80px]  hover:cursor-pointer object-contain"
+          className="h-[80px] w-[100px] cursor-pointer object-contain"
           src={Logo}
-          alt="image"
+          alt="EasyRental"
+          onClick={() => navigate("/")}
         />
 
-        <ul className=" hidden md:flex  gap-10 ">
-          {/* Home */}
+        {/* MOBILE MENU BUTTON */}
+
+        <button
+          type="button"
+          className="text-2xl md:hidden"
+          onClick={() =>
+            setIsMenuopen((isOpen) => !isOpen)
+          }
+          aria-label={
+            isMenuOpen
+              ? "Close menu"
+              : "Open menu"
+          }
+        >
+
+          {isMenuOpen ? (
+            <RxCross2 />
+          ) : (
+            <FiMenu />
+          )}
+
+        </button>
+
+        {/* ================= DESKTOP MENU ================= */}
+
+        <ul className="hidden items-center gap-10 md:flex">
+
+          {/* HOME */}
+
           <NavLink to="/">
-            <div className="flex items-center gap-1 cursor-pointer text-[black]">
-              <IoIosHome /> <p>Home</p>
+
+            <div className="flex cursor-pointer items-center gap-1 text-black">
+
+              <IoIosHome />
+
+              <p>Home</p>
+
             </div>
+
           </NavLink>
-          {/* Bike */}
+
+
+          {/* BIKE */}
+
           <NavLink to="/bike">
-            <div className="flex items-center gap-1 cursor-pointer text-[black]">
+
+            <div className="flex cursor-pointer items-center gap-1 text-black">
+
               <RiMotorbikeFill />
 
               <p>Bike</p>
+
             </div>
+
           </NavLink>
-          {/* Sccoter */}
+
+
+          {/* SCOOTER */}
+
           <NavLink to="/sccoter">
-            <div className="flex items-center gap-1 cursor-pointer text-[black]">
+
+            <div className="flex cursor-pointer items-center gap-1 text-black">
+
               <RiEBikeFill />
+
               <p>Sccoter</p>
+
             </div>
+
           </NavLink>
-          {/*How it works  */}
+
+
+          {/* HOW IT WORKS */}
+
           <NavLink to="/howitworks">
-            <div className="flex items-center gap-1 cursor-pointer text-[black]">
+
+            <div className="flex cursor-pointer items-center gap-1 text-black">
+
               <LuSettings2 />
 
               <p>How it works</p>
+
             </div>
+
           </NavLink>
-          {/* About us  */}
+
+
+          {/* ABOUT */}
+
           <NavLink to="/about">
-            <div className="flex items-center gap-1 cursor-pointer text-[black]">
+
+            <div className="flex cursor-pointer items-center gap-1 text-black">
+
               <FaUsers />
+
               <p>About Us</p>
+
             </div>
+
           </NavLink>
-          {/* contact us  */}
+
+
+          {/* CONTACT */}
+
           <NavLink to="/contact">
-            <div className="flex items-center gap-1 cursor-pointer text-[black]">
+
+            <div className="flex cursor-pointer items-center gap-1 text-black">
+
               <FaPhoneVolume />
+
               <p>Contact</p>
+
             </div>
+
           </NavLink>
-          <div className="flex  gap-3">
-            <NavLink
-              to="/login"
-              className="px-5 py-2 cursor-pointer rounded-lg border border-orange-500 
-               text-orange-500 font-semibold hover:bg-orange-50 
-               transition duration-300"
-            >
-              Login
-            </NavLink>
+
+
+          {/* ================= LOGIN / LOGOUT ================= */}
+
+          <div className="flex gap-3">
+
+            {isLoggedIn ? (
+
+              // LOGOUT
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="cursor-pointer rounded-lg border border-orange-500 px-5 py-2 font-semibold text-orange-500 transition duration-300 hover:bg-orange-50"
+              >
+                Logout
+              </button>
+
+            ) : (
+
+              // LOGIN
+              <NavLink
+                to="/login"
+                className="cursor-pointer rounded-lg border border-orange-500 px-5 py-2 font-semibold text-orange-500 transition duration-300 hover:bg-orange-50"
+              >
+                Login
+              </NavLink>
+
+            )}
+
+
+            {/* BOOK NOW */}
+
             <NavLink
               to="/booknow"
-              className="px-5 py-2 cursor-pointer rounded-lg bg-orange-500 
-  >
-  login
-   
-  </NavLink>
-   <NavLink to="/booknow"
-    className="px-5 py-2 cursor-pointer rounded-lg bg-orange-500 
-               text-white font-semibold hover:bg-orange-600 
-               transition duration-300"
+              className="cursor-pointer rounded-lg bg-orange-500 px-5 py-2 font-semibold text-white transition duration-300 hover:bg-orange-600"
             >
               Book Now
             </NavLink>
+
           </div>
+
         </ul>
+
       </div>
 
-      {/* Mobile Navigation */}
+
+      {/* ================= MOBILE MENU ================= */}
 
       {isMenuOpen && (
-        <ul className="flex flex-col md:hidden items-center space-y-3 pb-4">
-          <li>Home</li>
-          <li>About </li>
-          <li>Services </li>
-          <li>Contact Us</li>
+
+        <ul className="flex flex-col items-center space-y-3 pb-4 md:hidden">
+
+          {/* HOME */}
+
+          <li>
+
+            <NavLink
+              to="/"
+              onClick={() =>
+                setIsMenuopen(false)
+              }
+            >
+              Home
+            </NavLink>
+
+          </li>
+
+
+          {/* BIKE */}
+
+          <li>
+
+            <NavLink
+              to="/bike"
+              onClick={() =>
+                setIsMenuopen(false)
+              }
+            >
+              Bike
+            </NavLink>
+
+          </li>
+
+
+          {/* SCOOTER */}
+
+          <li>
+
+            <NavLink
+              to="/sccoter"
+              onClick={() =>
+                setIsMenuopen(false)
+              }
+            >
+              Sccoter
+            </NavLink>
+
+          </li>
+
+
+          {/* HOW IT WORKS */}
+
+          <li>
+
+            <NavLink
+              to="/howitworks"
+              onClick={() =>
+                setIsMenuopen(false)
+              }
+            >
+              How it works
+            </NavLink>
+
+          </li>
+
+
+          {/* ABOUT */}
+
+          <li>
+
+            <NavLink
+              to="/about"
+              onClick={() =>
+                setIsMenuopen(false)
+              }
+            >
+              About Us
+            </NavLink>
+
+          </li>
+
+
+          {/* CONTACT */}
+
+          <li>
+
+            <NavLink
+              to="/contact"
+              onClick={() =>
+                setIsMenuopen(false)
+              }
+            >
+              Contact
+            </NavLink>
+
+          </li>
+
+
+          {/* LOGIN / LOGOUT */}
+
+          <li>
+
+            {isLoggedIn ? (
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-lg border border-orange-500 px-5 py-2 font-semibold text-orange-500"
+              >
+                Logout
+              </button>
+
+            ) : (
+
+              <NavLink
+                to="/login"
+                onClick={() =>
+                  setIsMenuopen(false)
+                }
+                className="rounded-lg border border-orange-500 px-5 py-2 font-semibold text-orange-500"
+              >
+                Login
+              </NavLink>
+
+            )}
+
+          </li>
+
+
+          {/* BOOK NOW */}
+
+          <li>
+
+            <NavLink
+              to="/booknow"
+              onClick={() =>
+                setIsMenuopen(false)
+              }
+              className="rounded-lg bg-orange-500 px-5 py-2 font-semibold text-white"
+            >
+              Book Now
+            </NavLink>
+
+          </li>
+
         </ul>
+
       )}
+
     </div>
   );
 };
