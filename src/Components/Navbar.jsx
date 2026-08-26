@@ -79,7 +79,8 @@ const Navbar = () => {
                text-orange-500 font-semibold hover:bg-orange-50 
                transition duration-300"
   >
-    Login
+  login
+   
   </NavLink>
    <NavLink to="/booknow"
     className="px-5 py-2 cursor-pointer rounded-lg bg-orange-500 
