@@ -7,7 +7,6 @@ import { FaUsers } from "react-icons/fa";
 import { FaPhoneVolume } from "react-icons/fa6";
 import { LuSettings2 } from "react-icons/lu";
 
-
 import { RiMotorbikeFill } from "react-icons/ri";
 import { RiEBikeFill } from "react-icons/ri";
 
@@ -26,70 +25,68 @@ const Navbar = () => {
           alt="image"
         />
 
-     
         <ul className=" hidden md:flex  gap-10 ">
           {/* Home */}
           <NavLink to="/">
-            <div className="flex items-center gap-1 cursor-pointer text-[black]" >
+            <div className="flex items-center gap-1 cursor-pointer text-[black]">
               <IoIosHome /> <p>Home</p>
             </div>
           </NavLink>
           {/* Bike */}
           <NavLink to="/bike">
-          <div className="flex items-center gap-1 cursor-pointer text-[black]">
-            <RiMotorbikeFill />
+            <div className="flex items-center gap-1 cursor-pointer text-[black]">
+              <RiMotorbikeFill />
 
-            <p>Bike</p>
-          </div>
-         </NavLink>
-         {/* Sccoter */}
-          <NavLink to="/sccoter"> 
-          <div className="flex items-center gap-1 cursor-pointer text-[black]">
-          <RiEBikeFill />
-            <p>Sccoter</p>
+              <p>Bike</p>
             </div>
-            </NavLink>
+          </NavLink>
+          {/* Sccoter */}
+          <NavLink to="/sccoter">
+            <div className="flex items-center gap-1 cursor-pointer text-[black]">
+              <RiEBikeFill />
+              <p>Sccoter</p>
+            </div>
+          </NavLink>
           {/*How it works  */}
-          <NavLink  to="/howitworks">
-          <div className="flex items-center gap-1 cursor-pointer text-[black]">
-            <LuSettings2 />
+          <NavLink to="/howitworks">
+            <div className="flex items-center gap-1 cursor-pointer text-[black]">
+              <LuSettings2 />
 
-            <p>How it works</p>
-          </div>
+              <p>How it works</p>
+            </div>
           </NavLink>
           {/* About us  */}
           <NavLink to="/about">
-           <div className="flex items-center gap-1 cursor-pointer text-[black]">
-            <FaUsers />
-            <p>About Us</p>
-          </div>
+            <div className="flex items-center gap-1 cursor-pointer text-[black]">
+              <FaUsers />
+              <p>About Us</p>
+            </div>
           </NavLink>
           {/* contact us  */}
-           <NavLink to="/contact">
-           <div className="flex items-center gap-1 cursor-pointer text-[black]">
-            <FaPhoneVolume />
-            <p>Contact</p>
-          </div>
+          <NavLink to="/contact">
+            <div className="flex items-center gap-1 cursor-pointer text-[black]">
+              <FaPhoneVolume />
+              <p>Contact</p>
+            </div>
           </NavLink>
           <div className="flex  gap-3">
-
-   <NavLink to="/login"         
-  
-    className="px-5 py-2 cursor-pointer rounded-lg border border-orange-500 
+            <NavLink
+              to="/login"
+              className="px-5 py-2 cursor-pointer rounded-lg border border-orange-500 
                text-orange-500 font-semibold hover:bg-orange-50 
                transition duration-300"
-  >
-    Login
-  </NavLink>
-   <NavLink to="/booknow"
-    className="px-5 py-2 cursor-pointer rounded-lg bg-orange-500 
+            >
+              Login
+            </NavLink>
+            <NavLink
+              to="/booknow"
+              className="px-5 py-2 cursor-pointer rounded-lg bg-orange-500 
                text-white font-semibold hover:bg-orange-600 
                transition duration-300"
-  >
-    Book Now
-  </NavLink>
-</div>
-          
+            >
+              Book Now
+            </NavLink>
+          </div>
         </ul>
       </div>
 
