@@ -81,6 +81,12 @@ const Navbar = () => {
             <NavLink
               to="/booknow"
               className="px-5 py-2 cursor-pointer rounded-lg bg-orange-500 
+  >
+  login
+   
+  </NavLink>
+   <NavLink to="/booknow"
+    className="px-5 py-2 cursor-pointer rounded-lg bg-orange-500 
                text-white font-semibold hover:bg-orange-600 
                transition duration-300"
             >
