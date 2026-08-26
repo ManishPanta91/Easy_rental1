@@ -1,5 +1,5 @@
-import {ToastContainer} from "react-toastify";
-import Layout from "./Layout/Layout";
+import { ToastContainer } from "react-toastify";
+import Layout from "./Layout/Layout"
 
 function App() {
 
@@ -12,7 +12,7 @@ function App() {
         closeOnClick={false}
         pauseOnFocusLoss
       />
-      <Layout />
+      <Layout/>
     </>
   );
 }

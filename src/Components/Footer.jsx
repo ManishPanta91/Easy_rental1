@@ -16,7 +16,7 @@ const Footer = () => {
           <p className="mt-2 font-semibold text-black">Ride Explore Enjoy</p>
         </div>
 
-        <div className="text-center md:text-left">
+        <div className="text-center font-semibold md:text-left">
           <h3 className="mb-3 text-lg font-semibold text-black">Quick Links</h3>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>Home</li>
@@ -30,7 +30,7 @@ const Footer = () => {
 
         <div className="text-center md:text-left">
           <h3 className="mb-3 text-lg font-semibold text-black">Contact Us</h3>
-          <div className="space-y-3 text-sm text-gray-600">
+          <div className="space-y-3 text-sm font-semibold text-gray-600">
             <div className="flex items-center justify-center gap-2 md:justify-start">
              <FaPhoneVolume className="text-orange-500" />
              <span>+977 9800000000</span>
@@ -48,7 +48,7 @@ const Footer = () => {
 
         <div className="text-center md:text-left">
           <h3 className="mb-3 text-lg font-semibold text-black">Newsletter</h3>
-          <p className="mb-3 text-sm text-gray-600">Get the latest offers and travel tips.</p>
+          <p className="mb-3 text-sm font-semibold text-gray-600">Get the latest offers and travel tips.</p>
           <div className="flex flex-col gap-3 sm:flex-row md:flex-col lg:flex-row">
             <input
              type="email"
