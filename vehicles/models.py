@@ -2,7 +2,17 @@
 
 from django.db import models
 
-
+class VehicleType(models.TextChoices):
+    CYCLE = "cycle", "Cycle"
+    SCOOTER = "scooter", "Scooter"
+    MOTORCYCLE = "motorcycle", "Motorcycle"
+    AUTO_RICKSHAW = "auto_rickshaw", "Auto Rickshaw"
+    CAR = "car", "Car"
+    JEEP = "jeep", "Jeep"
+    BUS= "bus", "Bus"
+    TRUCK = "truck", "Truck"
+    
+    
 class VehicleStatus(models.TextChoices):
     ACTIVE = "active", "Active"
     INACTIVE = "inactive", "Inactive"
@@ -23,7 +33,7 @@ class Vehicle(models.Model):
     model = models.CharField(max_length=100)
     year = models.PositiveIntegerField()
 
-    vehicle_type = models.CharField(max_length=50)
+    vehicle_type = models.CharField(max_length=50, choices=VehicleType.choices, default=VehicleType.MOTORCYCLE)
     transmission = models.CharField(max_length=50,
                                     choices=Transmission.choices,
                                     default=Transmission.MANUAL)
@@ -51,20 +61,10 @@ class Vehicle(models.Model):
 
 
 class VehicleImage(models.Model):
-    vehicle = models.ForeignKey(
-        Vehicle,
-        on_delete=models.CASCADE,
-        related_name="images",
-    )
+    vehicle = models.ForeignKey(Vehicle,on_delete=models.CASCADE,related_name="images",)
 
-    image = models.ImageField(
-        upload_to="vehicles/",
-    )
+    image = models.ImageField(upload_to="vehicles/",)
 
-    is_primary = models.BooleanField(
-        default=False,
-    )
+    is_primary = models.BooleanField(default=False)
 
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
+    created_at = models.DateTimeField(auto_now_add=True)
