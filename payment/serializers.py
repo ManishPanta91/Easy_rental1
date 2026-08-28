@@ -1,3 +1,5 @@
+import uuid
+
 from rest_framework import serializers
 
 from .models import Payment
@@ -34,10 +36,10 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     def validate_booking(self, booking):
 
-        user = self.context["request"].user
+        request = self.context["request"]
 
-        # User can only pay for their own booking
-        if booking.user != user:
+        # Booking must belong to logged-in user
+        if booking.user != request.user:
             raise serializers.ValidationError(
                 "You cannot pay for this booking."
             )
@@ -45,11 +47,11 @@ class PaymentSerializer(serializers.ModelSerializer):
         # Booking must be pending
         if booking.status != "pending":
             raise serializers.ValidationError(
-                "This booking cannot be paid for."
+                "Only pending bookings can be paid."
             )
 
-        # Don't allow multiple payments
-        if hasattr(booking, "payment"):
+        # Don't allow multiple payments for the same booking
+        if Payment.objects.filter(booking=booking).exists():
             raise serializers.ValidationError(
                 "A payment already exists for this booking."
             )
@@ -63,6 +65,8 @@ class PaymentSerializer(serializers.ModelSerializer):
         payment = Payment.objects.create(
             booking=booking,
             amount=booking.total_price,
+            status="pending",
+            transaction_uuid=uuid.uuid4(),
         )
 
         return payment

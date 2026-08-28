@@ -33,6 +33,10 @@ INSTALLED_APPS = [
     
     'drf_spectacular',
     
+    # 'django_filters',
+    'corsheaders',
+    
+    
     
     
     # my apps
@@ -43,6 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -170,7 +175,7 @@ SIMPLE_JWT = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 ESEWA_PRODUCT_CODE = "EPAYTEST"
-
+# eSewa payment settings
 ESEWA_SECRET_KEY = "8gBm/:&EnhH.1/q"
 
 ESEWA_PAYMENT_URL = (
@@ -180,3 +185,12 @@ ESEWA_PAYMENT_URL = (
 ESEWA_STATUS_URL = (
     "https://rc.esewa.com.np/api/epay/transaction/status/"
 )
+
+
+ESEWA_SUCCESS_URL = "http://localhost:5500/success.html"
+ESEWA_FAILURE_URL = "http://localhost:5500/failure.html"
+
+
+
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = True

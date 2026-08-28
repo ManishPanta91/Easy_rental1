@@ -1,6 +1,7 @@
 from django.db import models
-class SucessURL(models.Model):
-    url = models.URLField()
+class EsewaRedrectUrls(models.Model):
+    success_url = models.URLField()
+    failure_url = models.URLField()
 class Payment(models.Model):
 
     STATUS_CHOICES = [

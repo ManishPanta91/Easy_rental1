@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Vehicle Rental - eSewa Payment</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 40px 20px;
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        color: #222;
+    }
+
+    .container {
+        max-width: 750px;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        margin-top: 0;
+    }
+
+    h2 {
+        margin-top: 0;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #60bb46;
+    }
+
+    button {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        background: #60bb46;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #4da638;
+    }
+
+    button:disabled {
+        background: #999;
+        cursor: not-allowed;
+    }
+
+    .danger-button {
+        background: #dc3545;
+    }
+
+    .danger-button:hover {
+        background: #b02a37;
+    }
+
+    .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    .checkbox input {
+        width: auto;
+    }
+
+    .checkbox label {
+        margin: 0;
+        font-weight: normal;
+    }
+
+    .response {
+        margin-top: 30px;
+    }
+
+    pre {
+        background: #1e1e1e;
+        color: #ddd;
+        padding: 20px;
+        border-radius: 6px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-size: 14px;
+    }
+
+    .payment-section {
+        margin-top: 30px;
+        padding: 20px;
+        background: #f1f8ef;
+        border: 1px solid #c8e6c0;
+        border-radius: 8px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .status {
+        margin-top: 20px;
+        padding: 12px;
+        border-radius: 6px;
+    }
+
+    .status.info {
+        background: #eef5ff;
+        color: #164b8a;
+    }
+
+    .status.success {
+        background: #eaf7e5;
+        color: #246b18;
+    }
+
+    .status.error {
+        background: #ffecec;
+        color: #a00000;
+    }
+
+    .divider {
+        margin: 30px 0;
+        border: none;
+        border-top: 1px solid #ddd;
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="container">
+
+```
+<h1>Vehicle Rental</h1>
+
+<p>
+    Create an eSewa payment for an existing booking.
+</p>
+
+
+<!-- ========================================= -->
+<!-- JWT TOKEN -->
+<!-- ========================================= -->
+
+<div class="form-group">
+
+    <label for="accessToken">
+        JWT Access Token
+    </label>
+
+    <input
+        id="accessToken"
+        type="password"
+        placeholder="Paste JWT access token"
+        autocomplete="off"
+    >
+
+</div>
+
+
+<div class="checkbox">
+
+    <input
+        id="rememberToken"
+        type="checkbox"
+    >
+
+    <label for="rememberToken">
+        Remember token
+    </label>
+
+</div>
+
+
+<button
+    type="button"
+    class="danger-button"
+    onclick="clearToken()"
+>
+    Clear Saved Token
+</button>
+
+
+<hr class="divider">
+
+
+<!-- ========================================= -->
+<!-- BOOKING ID -->
+<!-- ========================================= -->
+
+<div class="form-group">
+
+    <label for="bookingId">
+        Booking ID
+    </label>
+
+    <input
+        id="bookingId"
+        type="number"
+        min="1"
+        placeholder="Example: 8"
+    >
+
+</div>
+
+
+<!-- ========================================= -->
+<!-- CREATE PAYMENT -->
+<!-- ========================================= -->
+
+<button
+    id="createPaymentButton"
+    onclick="createPayment()"
+>
+    Create Payment
+</button>
+
+
+<!-- ========================================= -->
+<!-- STATUS -->
+<!-- ========================================= -->
+
+<div
+    id="status"
+    class="status hidden"
+></div>
+
+
+<!-- ========================================= -->
+<!-- RESPONSE -->
+<!-- ========================================= -->
+
+<div
+    id="responseSection"
+    class="response hidden"
+>
+
+    <h2>API Response</h2>
+
+    <pre id="response"></pre>
+
+</div>
+
+
+<!-- ========================================= -->
+<!-- ESEWA -->
+<!-- ========================================= -->
+
+<div
+    id="paymentSection"
+    class="payment-section hidden"
+>
+
+    <h2>eSewa Payment Ready</h2>
+
+    <p>
+        Django has returned the eSewa payment parameters.
+    </p>
+
+    <p>
+        Nothing has been submitted to eSewa yet.
+    </p>
+
+    <button
+        id="redirectButton"
+        onclick="redirectToEsewa()"
+    >
+        Continue to eSewa
+    </button>
+
+</div>
+```
+
+</div>
+
+<script>
+
+    /*
+     * ============================================
+     * CONFIG
+     * ============================================
+     */
+
+    const API_URL = "http://localhost:8000";
+
+
+    /*
+     * Stores the response from:
+     *
+     * POST /payment/payments/{id}/pay/
+     */
+
+    let paymentData = null;
+
+
+    /*
+     * ============================================
+     * LOAD SAVED TOKEN
+     * ============================================
+     */
+
+    window.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const savedToken =
+                localStorage.getItem(
+                    "access_token"
+                );
+
+
+            if (savedToken) {
+
+                document.getElementById(
+                    "accessToken"
+                ).value = savedToken;
+
+
+                document.getElementById(
+                    "rememberToken"
+                ).checked = true;
+            }
+
+        }
+    );
+
+
+    /*
+     * ============================================
+     * SHOW STATUS
+     * ============================================
+     */
+
+    function showStatus(
+        message,
+        type
+    ) {
+
+        const status =
+            document.getElementById(
+                "status"
+            );
+
+
+        status.textContent =
+            message;
+
+
+        status.className =
+            `status ${type}`;
+
+
+        status.classList.remove(
+            "hidden"
+        );
+    }
+
+
+    /*
+     * ============================================
+     * CLEAR TOKEN
+     * ============================================
+     */
+
+    function clearToken() {
+
+        localStorage.removeItem(
+            "access_token"
+        );
+
+
+        document.getElementById(
+            "accessToken"
+        ).value = "";
+
+
+        document.getElementById(
+            "rememberToken"
+        ).checked = false;
+
+
+        showStatus(
+            "Saved token cleared.",
+            "success"
+        );
+    }
+
+
+    /*
+     * ============================================
+     * CREATE PAYMENT
+     * ============================================
+     */
+
+    async function createPayment() {
+
+        const accessToken =
+            document.getElementById(
+                "accessToken"
+            ).value.trim();
+
+
+        const bookingId =
+            document.getElementById(
+                "bookingId"
+            ).value.trim();
+
+
+        const rememberToken =
+            document.getElementById(
+                "rememberToken"
+            ).checked;
+
+
+        const button =
+            document.getElementById(
+                "createPaymentButton"
+            );
+
+
+        const responseSection =
+            document.getElementById(
+                "responseSection"
+            );
+
+
+        const responseElement =
+            document.getElementById(
+                "response"
+            );
+
+
+        const paymentSection =
+            document.getElementById(
+                "paymentSection"
+            );
+
+
+        /*
+         * ========================================
+         * VALIDATION
+         * ========================================
+         */
+
+        if (!accessToken) {
+
+            showStatus(
+                "Please enter your JWT access token.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if (!bookingId) {
+
+            showStatus(
+                "Please enter a booking ID.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /*
+         * ========================================
+         * SAVE TOKEN
+         * ========================================
+         */
+
+        if (rememberToken) {
+
+            localStorage.setItem(
+                "access_token",
+                accessToken
+            );
+
+        } else {
+
+            localStorage.removeItem(
+                "access_token"
+            );
+        }
+
+
+        /*
+         * ========================================
+         * RESET
+         * ========================================
+         */
+
+        paymentData = null;
+
+
+        paymentSection.classList.add(
+            "hidden"
+        );
+
+
+        responseSection.classList.remove(
+            "hidden"
+        );
+
+
+        button.disabled = true;
+
+
+        button.textContent =
+            "Creating Payment...";
+
+
+        /*
+         * ========================================
+         * STEP 1
+         *
+         * POST /payment/payments/
+         * ========================================
+         */
+
+        showStatus(
+            "Creating payment...",
+            "info"
+        );
+
+
+        responseElement.textContent =
+            "POST /payment/payments/\n\n" +
+            "Sending request...";
+
+
+        try {
+
+            const createResponse =
+                await fetch(
+                    `${API_URL}/payment/payments/`,
+                    {
+                        method: "POST",
+
+                        headers: {
+
+                            "Accept":
+                                "application/json",
+
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                `Bearer ${accessToken}`
+                        },
+
+                        body: JSON.stringify({
+
+                            booking:
+                                Number(bookingId)
+
+                        })
+                    }
+                );
+
+
+            const createData =
+                await createResponse.json();
+
+
+            /*
+             * SHOW EXACT RESPONSE
+             */
+
+            responseElement.textContent =
+                JSON.stringify(
+                    createData,
+                    null,
+                    4
+                );
+
+
+            /*
+             * ========================================
+             * HANDLE ERROR
+             * ========================================
+             */
+
+            if (!createResponse.ok) {
+
+                showStatus(
+                    `Create payment failed (${createResponse.status}).`,
+                    "error"
+                );
+
+
+                button.disabled = false;
+
+                button.textContent =
+                    "Create Payment";
+
+
+                return;
+            }
+
+
+            /*
+             * ========================================
+             * PAYMENT ID
+             * ========================================
+             */
+
+            const paymentId =
+                createData.id;
+
+
+            if (!paymentId) {
+
+                throw new Error(
+                    "No payment ID was returned by Django."
+                );
+            }
+
+
+            /*
+             * ========================================
+             * STEP 2
+             *
+             * POST /payment/payments/{id}/pay/
+             * ========================================
+             */
+
+            button.textContent =
+                "Preparing eSewa...";
+
+
+            showStatus(
+                `Payment #${paymentId} created. Preparing eSewa...`,
+                "info"
+            );
+
+
+            responseElement.textContent +=
+                "\n\n==============================\n\n" +
+                `POST /payment/payments/${paymentId}/pay/\n\n` +
+                "Sending request...";
+
+
+            const payResponse =
+                await fetch(
+                    `${API_URL}/payment/payments/${paymentId}/pay/`,
+                    {
+                        method: "POST",
+
+                        headers: {
+
+                            "Accept":
+                                "application/json",
+
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                `Bearer ${accessToken}`
+                        }
+                    }
+                );
+
+
+            const payData =
+                await payResponse.json();
+
+
+            /*
+             * ========================================
+             * SHOW EXACT ESEWA RESPONSE
+             * ========================================
+             */
+
+            responseElement.textContent =
+                JSON.stringify(
+                    payData,
+                    null,
+                    4
+                );
+
+
+            /*
+             * ========================================
+             * HANDLE ERROR
+             * ========================================
+             */
+
+            if (!payResponse.ok) {
+
+                showStatus(
+                    `Preparing eSewa payment failed (${payResponse.status}).`,
+                    "error"
+                );
+
+
+                button.disabled = false;
+
+                button.textContent =
+                    "Create Payment";
+
+
+                return;
+            }
+
+
+            /*
+             * ========================================
+             * SAVE ESEWA DATA
+             * ========================================
+             */
+
+            paymentData =
+                payData;
+
+
+            /*
+             * ========================================
+             * SHOW REDIRECT BUTTON
+             * ========================================
+             */
+
+            paymentSection.classList.remove(
+                "hidden"
+            );
+
+
+            showStatus(
+                "Payment prepared successfully. Review the response, then click Continue to eSewa.",
+                "success"
+            );
+
+
+            button.textContent =
+                "Payment Ready";
+
+
+            /*
+             * IMPORTANT:
+             *
+             * THERE IS NO REDIRECT HERE.
+             *
+             * The user must click:
+             *
+             * Continue to eSewa
+             */
+
+        } catch (error) {
+
+            console.error(
+                error
+            );
+
+
+            responseElement.textContent =
+                "ERROR\n\n" +
+                error.message;
+
+
+            showStatus(
+                error.message,
+                "error"
+            );
+
+
+            button.disabled = false;
+
+            button.textContent =
+                "Create Payment";
+        }
+
+    }
+
+
+    /*
+     * ============================================
+     * REDIRECT TO ESEWA
+     * ============================================
+     *
+     * This function ONLY runs when the user
+     * clicks "Continue to eSewa".
+     */
+
+    function redirectToEsewa() {
+
+        if (!paymentData) {
+
+            showStatus(
+                "No eSewa payment data is available.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /*
+         * ========================================
+         * CREATE FORM
+         * ========================================
+         */
+
+        const form =
+            document.createElement(
+                "form"
+            );
+
+
+        form.method =
+            "POST";
+
+
+        form.action =
+            paymentData.payment_url;
+
+
+        /*
+         * ========================================
+         * ESEWA PARAMETERS
+         * ========================================
+         */
+
+        const fields = {
+
+            amount:
+                paymentData.amount,
+
+            tax_amount:
+                paymentData.tax_amount,
+
+            total_amount:
+                paymentData.total_amount,
+
+            transaction_uuid:
+                paymentData.transaction_uuid,
+
+            product_code:
+                paymentData.product_code,
+
+            product_service_charge:
+                paymentData.product_service_charge,
+
+            product_delivery_charge:
+                paymentData.product_delivery_charge,
+
+            success_url:
+                paymentData.success_url,
+
+            failure_url:
+                paymentData.failure_url,
+
+            signed_field_names:
+                paymentData.signed_field_names,
+
+            signature:
+                paymentData.signature
+        };
+
+
+        /*
+         * ========================================
+         * ADD FORM FIELDS
+         * ========================================
+         */
+
+        Object.entries(fields).forEach(
+            function ([name, value]) {
+
+                const input =
+                    document.createElement(
+                        "input"
+                    );
+
+
+                input.type =
+                    "hidden";
+
+
+                input.name =
+                    name;
+
+
+                input.value =
+                    value;
+
+
+                form.appendChild(
+                    input
+                );
+
+            }
+        );
+
+
+        /*
+         * ========================================
+         * SUBMIT TO ESEWA
+         * ========================================
+         */
+
+        document.body.appendChild(
+            form
+        );
+
+
+        form.submit();
+    }
+
+</script>
+
+</body>
+
+</html>

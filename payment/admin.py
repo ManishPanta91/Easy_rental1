@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Payment, SucessURL
+from .models import Payment, EsewaRedrectUrls
 
-# admin.site.register(Payment)
-admin.site.register(SucessURL)
+admin.site.register(Payment)
+admin.site.register(EsewaRedrectUrls)
