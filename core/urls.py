@@ -19,6 +19,9 @@ urlpatterns = [
     # vehicle app urls
     path('vehicle/', include('vehicles.urls')),
     
+    # booking app urls
+    path('booking/', include('booking.urls'))
+    
 ]
     
 
