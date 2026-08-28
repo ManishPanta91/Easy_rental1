@@ -20,7 +20,10 @@ urlpatterns = [
     path('vehicle/', include('vehicles.urls')),
     
     # booking app urls
-    path('booking/', include('booking.urls'))
+    path('booking/', include('booking.urls')),
+    
+    #payment app urls
+    path('payment/', include('payment.urls')),
     
 ]
     
