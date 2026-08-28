@@ -3,6 +3,20 @@
 from django.db import models
 
 
+class VehicleStatus(models.TextChoices):
+    ACTIVE = "active", "Active"
+    INACTIVE = "inactive", "Inactive"
+    MAINTENANCE = "maintenance", "Maintenance"
+
+class Transmission(models.TextChoices):
+        MANUAL = "manual", "Manual"
+        AUTOMATIC = "automatic", "Automatic"
+
+class FuelType(models.TextChoices):
+        PETROL = "petrol", "Petrol"
+        DIESEL = "diesel", "Diesel"
+        ELECTRIC = "electric", "Electric"
+        HYBRID = "hybrid", "Hybrid"
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
     brand = models.CharField(max_length=100)
@@ -10,8 +24,12 @@ class Vehicle(models.Model):
     year = models.PositiveIntegerField()
 
     vehicle_type = models.CharField(max_length=50)
-    transmission = models.CharField(max_length=50)
-    fuel_type = models.CharField(max_length=50)
+    transmission = models.CharField(max_length=50,
+                                    choices=Transmission.choices,
+                                    default=Transmission.MANUAL)
+    fuel_type = models.CharField(max_length=50,
+                                 choices=FuelType.choices,
+                                 default=FuelType.PETROL)
 
     seats = models.PositiveIntegerField()
 
@@ -24,7 +42,8 @@ class Vehicle(models.Model):
 
     status = models.CharField(
         max_length=20,
-        default="active",
+        choices=VehicleStatus.choices,
+        default=VehicleStatus.ACTIVE,
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
