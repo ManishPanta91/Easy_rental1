@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     # my apps
     'user',
     'vehicles',
+    'booking',
 ]
 
 MIDDLEWARE = [
