@@ -188,8 +188,8 @@ ESEWA_STATUS_URL = (
 )
 
 
-ESEWA_SUCCESS_URL = "http://localhost:5500/success.html"
-ESEWA_FAILURE_URL = "http://localhost:5500/failure.html"
+ESEWA_SUCCESS_URL = "http://localhost:8000/api/payments/esewa/success/"
+ESEWA_FAILURE_URL = "http://localhost:8000/api/payments/esewa/failure/"
 
 
 

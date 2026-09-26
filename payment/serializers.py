@@ -66,7 +66,7 @@ class PaymentSerializer(serializers.ModelSerializer):
             booking=booking,
             amount=booking.total_price,
             status="pending",
-            transaction_uuid=uuid.uuid4(),
+            transaction_uuid=str(uuid.uuid4()),
         )
 
         return payment

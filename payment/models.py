@@ -14,6 +14,12 @@ class Payment(BaseModel):
         ("pending", "Pending"),
         ("completed", "Completed"),
         ("failed", "Failed"),
+        # Statuses returned by the eSewa Status Check API
+        ("full_refund", "Full Refund"),
+        ("partial_refund", "Partial Refund"),
+        ("ambiguous", "Ambiguous"),
+        ("not_found", "Not Found"),
+        ("canceled", "Canceled"),
     ]
 
     booking = models.OneToOneField(
