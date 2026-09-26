@@ -1,8 +1,14 @@
 from django.db import models
-class EsewaRedrectUrls(models.Model):
+
+from common.models import BaseModel
+
+
+class EsewaRedrectUrls(BaseModel):
     success_url = models.URLField()
     failure_url = models.URLField()
-class Payment(models.Model):
+
+
+class Payment(BaseModel):
 
     STATUS_CHOICES = [
         ("pending", "Pending"),
@@ -44,13 +50,5 @@ class Payment(models.Model):
         blank=True,
     )
 
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
-
     def __str__(self):
-        return f"Payment #{self.id} - Booking #{self.booking.id}"
+        return f"Payment {self.id} - Booking {self.booking.id}"
