@@ -1,0 +1,30 @@
+[Unit]
+Description=Gunicorn daemon for VehicleRental Django API
+After=network.target
+
+[Service]
+# Replace 'ubuntu' with your server's non-root username
+User=ubuntu
+Group=www-data
+
+# Path to your project directory on the server
+WorkingDirectory=/var/www/vehicle_rental/backend
+
+# Path to gunicorn binary inside your Python 3.8 virtual environment
+ExecStart=/var/www/vehicle_rental/backend/venv/bin/gunicorn \
+          --config /var/www/vehicle_rental/backend/gunicorn_config.py \
+          core.wsgi:application
+
+# Restart automatically on crash
+Restart=always
+RestartSec=3
+
+# Environment variables (or use EnvironmentFile=/var/www/vehicle_rental/backend/.env)
+EnvironmentFile=/var/www/vehicle_rental/backend/.env
+
+# Standard output and error logging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

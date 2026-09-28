@@ -1,7 +1,7 @@
-﻿# 🚗 Easy Rental — Backend API
+# 🚗 Easy Rental — Backend API
 
 > REST API for the Easy Rental vehicle rental platform.
-> Built with **Django 6.1** · **Django REST Framework** · **JWT Auth** · **eSewa ePay**
+> Built with **Django 4.2 LTS** · **Django REST Framework** · **JWT Auth** · **eSewa ePay** · **Gunicorn & Nginx**
 
 ---
 
@@ -10,11 +10,12 @@
 1. [Tech Stack](#-tech-stack)
 2. [Prerequisites](#-prerequisites)
 3. [Getting Started](#-getting-started)
-4. [Project Structure](#-project-structure)
-5. [API Reference](#-api-reference)
-6. [Authentication Guide](#-authentication-guide)
-7. [eSewa Payment Flow](#-esewa-payment-flow)
-8. [Test Credentials](#-test-credentials)
+4. [Production Deployment (Gunicorn & Nginx)](#-production-deployment-gunicorn--nginx)
+5. [Project Structure](#-project-structure)
+6. [API Reference](#-api-reference)
+7. [Authentication Guide](#-authentication-guide)
+8. [eSewa Payment Flow](#-esewa-payment-flow)
+9. [Test Credentials](#-test-credentials)
 
 ---
 
@@ -22,19 +23,22 @@
 
 | Layer | Technology |
 |---|---|
-| Framework | Django 6.1 |
-| API | Django REST Framework 3.18 |
+| Runtime | Python 3.8+ (Supports 3.8 - 3.12) |
+| Framework | Django 4.2 LTS |
+| API | Django REST Framework 3.14 |
 | Auth | JWT via `djangorestframework-simplejwt` |
 | API Docs | `drf-spectacular` (Swagger / ReDoc) |
 | Payment | eSewa ePay (UAT sandbox) |
-| Database | SQLite (dev) |
+| Production WSGI | Gunicorn 21.2 |
+| Web Server & Reverse Proxy | Nginx |
+| Database | SQLite (dev) / PostgreSQL (prod ready) |
 | Media | Pillow (image uploads) |
 
 ---
 
 ## ✅ Prerequisites
 
-- **Python 3.11+** — https://www.python.org/downloads/
+- **Python 3.8+** — https://www.python.org/downloads/
 - **Git** — https://git-scm.com/
 
 ---
@@ -122,13 +126,46 @@ Password (again): ********
 
 > The admin account is required to add vehicles, confirm/complete bookings, and access `/admin/`.
 
-### 7. Run the development server
+### 7. Seed sample vehicles (Optional but Recommended)
+
+Populate the database with 23 realistic vehicles across cycles, scooters, motorcycles, cars, jeeps, auto rickshaws, buses, and trucks (with primary images):
+
+```bash
+python manage.py seed_vehicles
+```
+
+To reset and re-seed from scratch:
+```bash
+python manage.py seed_vehicles --clear
+```
+
+*(Alternatively, run `python seed_vehicles.py` directly).*
+
+### 8. Run the development server
 
 ```bash
 python manage.py runserver
 ```
 
 Server starts at: **http://localhost:8000**
+
+---
+
+## 🚢 Production Deployment (Gunicorn & Nginx)
+
+For deploying onto a Linux server running Python 3.8:
+
+1. **Gunicorn Configuration**: See [gunicorn_config.py](file:///d:/6thsemproject/backend/gunicorn_config.py)
+2. **Systemd Service Unit**: See [vehicle_rental.service](file:///d:/6thsemproject/backend/vehicle_rental.service)
+3. **Nginx Reverse Proxy Config**: See [nginx.conf](file:///d:/6thsemproject/backend/nginx.conf)
+4. **Environment Template**: See [.env.example](file:///d:/6thsemproject/backend/.env.example)
+
+Full step-by-step instructions are documented in [DEPLOYMENT.md](file:///d:/6thsemproject/backend/DEPLOYMENT.md).
+
+Quick test run of Gunicorn locally:
+```bash
+gunicorn --config gunicorn_config.py core.wsgi:application
+```
 
 ---
 
